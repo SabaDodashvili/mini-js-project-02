@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="container__title">Hangman</h1>
+      <h2 class="container__sub-title">Find the hidden word - Using keyboard</h2>
+      <div class="container__theme-change theme-change">
+        <span class="theme-change__icon theme-change__icon_sun">
+          <svg><use xlink:href="sprite.svg#sun"></use></svg>
+        </span>
+        <span class="theme-change__ball"></span>
+        <span class="theme-change__icon theme-change__icon_moon">
+          <svg><use xlink:href="sprite.svg#moon"></use></svg>
+        </span>
+      </div>
+      <div class="container__game-box game-box">
+        <div class="game-box__gibbet gibbet">
+          <span class="gibbet__element"></span>
+          <span class="gibbet__element"></span>
+          <span class="gibbet__element"></span>
+          <span class="gibbet__element"></span>
+          <div class="gibbe__human">
+            <span class="gibbet__head gibbet-head human-element"> </span>
+            <span class="gibbet__body human-element"></span>
+            <span class="gibbet__hand gibbet__hand_left human-element"></span>
+            <span class="gibbet__hand gibbet__hand_right human-element"></span>
+            <span class="gibbet__leg gibbet__leg_left human-element"></span>
+            <span class="gibbet__leg gibbet__leg_right human-element"></span>
+          </div>
+        </div>
+        <div class="game-box__wrong-letters wrong-letters">
+          <h3 class="wrong-letters__descr-title">wrong letters:</h3>
+          <div class="wrong-letters__board"></div>
+        </div>
+        <div class="game-box__input-word input-word"></div>
+      </div>
+    </div>
+    <script src="scripts.js"></script>
+  </body>
+</html>
