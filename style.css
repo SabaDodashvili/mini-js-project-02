@@ -78,6 +78,7 @@ h6 {
   max-width: 600px;
   padding: 15px;
   margin: 0 auto;
+  overflow: hidden;
 }
 .container__title {
   font-family: sans-serif;
@@ -330,4 +331,21 @@ h6 {
   border-bottom: 2px solid var(--second-color);
   min-width: 35px;
   height: 40px;
+}
+.repeating-symbol-popup {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  font-family: sans-serif;
+  columns: var(--second-color);
+  padding: 10px 20px;
+  background-color: rgb(204 194 194);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.repeating-symbol-popup.active {
+  transform: translate(-50%, 0px);
 }

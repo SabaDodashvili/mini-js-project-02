@@ -25,9 +25,11 @@ window.onload = function () {
   let randomWord = wordsArr[Math.floor(Math.random() * wordsArr.length)];
   let wrongLetters = document.querySelector('.wrong-letters__board');
   let humanElements = document.querySelectorAll('.human-element');
+  let repeatingPopup = document.querySelector('.repeating-symbol-popup');
   let tryCounter = 0;
   let gameEnd = false;
   let letterInput = ``;
+  let inputLetters = '';
   let buttonKey;
 
   for (let i = 0; i < randomWord.length; i++) {
@@ -40,30 +42,21 @@ window.onload = function () {
   document.addEventListener('keyup', (e) => {
     let regxp = /[a-z|A-Z]/;
     buttonKey = e.key.toLowerCase();
-    if (regxp.test(buttonKey) && buttonKey.length == 1 && randomWord.indexOf(buttonKey) !== -1 && !gameEnd) {
-      documentActions(e);
-    } else if (regxp.test(buttonKey) && buttonKey.length == 1 && wrongLetters.textContent.indexOf(buttonKey) == -1 && !gameEnd) {
-      wrongLetters.textContent += buttonKey + ', ';
-      humanElements[tryCounter].style.display = 'block';
-      tryCounter += 1;
-      if (tryCounter === 6) {
-        document.querySelector('.gibbet__head').innerHTML = `
-				      <span class="gibbet-head__eye">
-                <span></span>
-                <span></span>
-              </span>
-              <span class="gibbet-head__eye">
-                <span></span>
-                <span></span>
-              </span>
-              <span class="gibbet-head__mouth"></span>
-          <span class="gibbet-head__tongue"></span>`;
-        gameEnd = true;
+
+    if (inputLetters.indexOf(buttonKey) == -1) {
+      inputLetters += buttonKey;
+      if (regxp.test(buttonKey) && buttonKey.length == 1 && randomWord.indexOf(buttonKey) !== -1 && !gameEnd) {
+        addCorrectLetter(e);
+      } else if (regxp.test(buttonKey) && buttonKey.length == 1 && wrongLetters.textContent.indexOf(buttonKey) == -1 && !gameEnd) {
+        addWrongLetter();
       }
+    } else if (inputLetters.indexOf(buttonKey) !== -1) {
+      repeatingPopup.classList.add('active');
+      setTimeout(changePopupStatus, 1500);
     }
   });
 
-  function documentActions(e) {
+  function addCorrectLetter(e) {
     let indexsArr = getListIdx(randomWord, buttonKey);
 
     for (let i = 0; i < inputWordLettersArr.length; i++) {
@@ -76,6 +69,26 @@ window.onload = function () {
 
     if (checkGuessLetters() === false) {
       doConfetti();
+      gameEnd = true;
+    }
+  }
+
+  function addWrongLetter() {
+    wrongLetters.textContent += buttonKey + ', ';
+    humanElements[tryCounter].style.display = 'block';
+    tryCounter += 1;
+    if (tryCounter === 6) {
+      document.querySelector('.gibbet__head').innerHTML = `
+				      <span class="gibbet-head__eye">
+                <span></span>
+                <span></span>
+              </span>
+              <span class="gibbet-head__eye">
+                <span></span>
+                <span></span>
+              </span>
+              <span class="gibbet-head__mouth"></span>
+          <span class="gibbet-head__tongue"></span>`;
       gameEnd = true;
     }
   }
@@ -100,6 +113,10 @@ window.onload = function () {
     }
 
     return notFilled;
+  }
+
+  function changePopupStatus() {
+    repeatingPopup.classList.remove('active');
   }
 
   function doConfetti() {
