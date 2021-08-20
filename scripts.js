@@ -26,37 +26,36 @@ window.onload = function () {
   let wrongLetters = document.querySelector('.wrong-letters__board');
   let humanElements = document.querySelectorAll('.human-element');
   let repeatingPopup = document.querySelector('.repeating-symbol-popup');
+  let gameEndPopup = document.querySelector('.game-end-popup');
+  let playAgainBtn = document.querySelector('.game-end-popup__play-again-btn');
   let tryCounter = 0;
   let gameEnd = false;
   let letterInput = ``;
   let inputLetters = '';
   let buttonKey;
-
-  for (let i = 0; i < randomWord.length; i++) {
-    letterInput += `<span class="input-word__letter"></span>`;
-  }
-
-  document.querySelector('.game-box__input-word').insertAdjacentHTML('afterbegin', letterInput);
-  let inputWordLettersArr = document.querySelectorAll('.input-word__letter');
+  let inputWordLettersArr;
+  createInputLetters();
 
   document.addEventListener('keyup', (e) => {
     let regxp = /[a-z|A-Z]/;
     buttonKey = e.key.toLowerCase();
 
-    if (inputLetters.indexOf(buttonKey) == -1) {
+    if (inputLetters.indexOf(buttonKey) == -1 && buttonKey.length == 1 && !gameEnd && regxp.test(buttonKey)) {
       inputLetters += buttonKey;
-      if (regxp.test(buttonKey) && buttonKey.length == 1 && randomWord.indexOf(buttonKey) !== -1 && !gameEnd) {
+      if (randomWord.indexOf(buttonKey) !== -1) {
         addCorrectLetter(e);
-      } else if (regxp.test(buttonKey) && buttonKey.length == 1 && wrongLetters.textContent.indexOf(buttonKey) == -1 && !gameEnd) {
+      } else if (wrongLetters.textContent.indexOf(buttonKey) == -1) {
         addWrongLetter();
       }
-    } else if (inputLetters.indexOf(buttonKey) !== -1) {
+    } else if (inputLetters.indexOf(buttonKey) !== -1 && !gameEnd) {
       repeatingPopup.classList.add('active');
-      setTimeout(changePopupStatus, 1500);
+      setTimeout(changeRepeatingPopupStatus, 1500);
     }
   });
 
-  function addCorrectLetter(e) {
+  playAgainBtn.addEventListener('click', restartGame);
+
+  function addCorrectLetter() {
     let indexsArr = getListIdx(randomWord, buttonKey);
 
     for (let i = 0; i < inputWordLettersArr.length; i++) {
@@ -69,6 +68,7 @@ window.onload = function () {
 
     if (checkGuessLetters() === false) {
       doConfetti();
+      setTimeout(changeGameEndPopupStatus('Congratulations! You won! 👍👍'), 700);
       gameEnd = true;
     }
   }
@@ -89,8 +89,18 @@ window.onload = function () {
               </span>
               <span class="gibbet-head__mouth"></span>
           <span class="gibbet-head__tongue"></span>`;
+      setTimeout(changeGameEndPopupStatus('Sorry You Lose. 😢'), 700);
       gameEnd = true;
     }
+  }
+
+  function createInputLetters() {
+    for (let i = 0; i < randomWord.length; i++) {
+      letterInput += `<span class="input-word__letter"></span>`;
+    }
+
+    document.querySelector('.game-box__input-word').insertAdjacentHTML('afterbegin', letterInput);
+    inputWordLettersArr = document.querySelectorAll('.input-word__letter');
   }
 
   function getListIdx(str, substr) {
@@ -115,8 +125,13 @@ window.onload = function () {
     return notFilled;
   }
 
-  function changePopupStatus() {
+  function changeRepeatingPopupStatus() {
     repeatingPopup.classList.remove('active');
+  }
+
+  function changeGameEndPopupStatus(string) {
+    gameEndPopup.insertAdjacentHTML('afterbegin', `<div class="game-end-popup__win-lose-message">${string}</div>`);
+    gameEndPopup.classList.add('open');
   }
 
   function doConfetti() {
@@ -138,5 +153,22 @@ window.onload = function () {
     if (Date.now() < end) {
       requestAnimationFrame(frame);
     }
+  }
+
+  function restartGame() {
+    randomWord = wordsArr[Math.floor(Math.random() * wordsArr.length)];
+    for (let i = 0; i < humanElements.length; i++) {
+      humanElements[i].style.display = 'none';
+    }
+    wrongLetters.textContent = '';
+    tryCounter = 0;
+    gameEndPopup.classList.remove('open');
+    letterInput = ``;
+    inputLetters = '';
+    document.querySelector('.game-box__input-word').innerHTML = '';
+    document.querySelector('.game-end-popup__win-lose-message').remove();
+    document.querySelector('.gibbet__head').innerHTML = '';
+    createInputLetters();
+    gameEnd = false;
   }
 };
