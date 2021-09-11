@@ -2,20 +2,16 @@ let themeCahngeBtn = document.querySelector('.theme-change');
 
 themeCahngeBtn.addEventListener('click', toggleTheme);
 
+function toggleTheme() {
+  localStorage.getItem('theme') === 'light-theme' ? initialState('dark-theme') : initialState('light-theme');
+}
+
 function initialState(themeName) {
   localStorage.setItem('theme', themeName);
   document.documentElement.className = themeName;
 }
 
-function toggleTheme(params) {
-  if (localStorage.getItem('theme') == 'dark-theme') {
-    initialState('light-theme');
-  } else {
-    initialState('dark-theme');
-  }
-}
-
-initialState('light-theme');
+localStorage.getItem('theme') !== 'null' ? initialState(localStorage.getItem('theme')) : initialState('light-theme');
 // ================================================ H A N G M A N ========================================================
 
 window.onload = function () {
